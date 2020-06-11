@@ -1,9 +1,14 @@
-traberlang
+Trabalho produtor-consumidor Erlang
 =====
 
-An OTP application
+### Para rodar o Back:
 
-Build
------
+    $ rebar3 shell
+    1> estoque:start().
+    
+### Para rodar o Front:
 
-    $ rebar3 compile
+    $ cd web
+    $ yarn start
+    
+* Acessar `localhost:3000`
