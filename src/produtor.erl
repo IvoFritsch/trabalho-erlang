@@ -26,7 +26,7 @@ finalizaproducaofanta({E, NP, Ws}) ->
 
 produzrandom({E, NP, Ws}) -> 
     enviaStateProdutor({NP, "", Ws}),
-    timer:apply_after(1000, produtor, produz, [rand:uniform(2), {E, NP, Ws}]).
+    timer:apply_after(rand:uniform(1100) + 400, produtor, produz, [rand:uniform(2), {E, NP, Ws}]).
 
 enviaStateProdutor({NP, Produto, Ws}) -> 
     Ws ! {send, io_lib:format("{ \"event\": \"PRODUTOR\", \"np\": ~w, \"produto\": \"~s\" }", [NP, Produto])}.
