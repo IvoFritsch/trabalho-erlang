@@ -57,9 +57,9 @@ start() ->
     spawn(consumidor, start, [{self(), 4, Ws}]),
     recebesolicitacoes({0,0, Ws}).
 ```
-Nesse trecho inicial, ocorre a inicialização de diferentes processos, como o da WebSocket, dos produtos e consumidores.
+Nesse trecho inicial, ocorre a inicialização de diferentes processos, como o do WebSocket, dos produtores e consumidores.
 
-A função `recebesolicitacoes` executa durante toda a execução do sistema e recebe mensagens dos processos de consumidores e produtores e faz os devidos tratamentos de acordo com o caso. Usando de exemplo o recebimento e solitação de cocas:
+A função `recebesolicitacoes` roda durante toda a execução do sistema e recebe mensagens dos processos de consumidores e produtores e faz os devidos tratamentos de acordo com o caso. Usando de exemplo o recebimento e solitação de cocas:
 
 ```erlang
 {produzida, coca} -> 
@@ -81,11 +81,11 @@ A função `recebesolicitacoes` executa durante toda a execução do sistema e r
    end;
 ```
 
-Através de `enviaStateEstoque` a WebSocket comunica a aplicação web de uma alteração no estado do estoque. Quando um produto é solicitado, uma mensagem de retorno é enviada para o pid `C`, de acordo com disponibilidade do produto.
+Através de `enviaStateEstoque` a WebSocket comunica a aplicação web de uma alteração no estado do estoque. Quando um produto é solicitado, uma mensagem de retorno é enviada para o pid `C`(Consumidor que solicitou o produto), de acordo com disponibilidade em estoque.
 
 ### Produtor
 
-Os produtores executam a produção alteatória dos 2 tipos de produtos em um intervalo de tempo dinâmico, definindo por um timer:
+Os produtores executam a produção aleatória dos 2 tipos de produtos em um intervalo de tempo dinâmico, definindo por um timer:
 ```erlang
 produzrandom({E, NP, Ws}) -> 
     enviaStateProdutor({NP, "", Ws}),
@@ -100,7 +100,7 @@ produz(1, {E, NP, Ws}) ->
     timer:apply_after(3500, produtor, finalizaproducaococa, [{E, NP, Ws}]);
 ```
 
-Quando a producão é finalizada, uma mensagem é enviada para o processo de estoque e o produtor reinicia sua lógica de produção:
+Quando a producão é finalizada, uma mensagem é enviada para o processo de estoque informando que o produto está pronto e o produtor reinicia sua lógica de produção:
 ```erlang
 finalizaproducaococa({E, NP, Ws}) -> 
     io:format("Produtor ~w -> Terminada coca\n", [NP]),
